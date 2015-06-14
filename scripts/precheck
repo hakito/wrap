@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+function is_available {
+        echo -n "Checking if command '$1' is available..."
+        if which $1 > /dev/null
+        then echo OK
+        else echo FAILED; exit 1
+        fi
+}
+
+is_available sfdisk
+is_available sed
+is_available mkfs.$1
+is_available partprobe
+is_available e2label
+is_available mkdir
+is_available rm
+is_available realpath
+is_available debootstrap
+is_available grep
+is_available wc

@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+
+echo config: Loading config
+source build.config
+
+read -r -p "All on $TARGET will be erased. Continue? [y/N] " response
+response=${response,,}    # tolower
+if ! [[ $response =~ ^(yes|y)$ ]]; then
+        exit
+fi
+
+echo precheck: Checking preconditions before actual build
+./precheck $FILESYSTEM
+
+echo buildkernel: Building the kernel
+if ! [ -d "kernout" ]; then
+mkdir kernout
+cp kernel.config kernout/.config
+fi
+KERNOUT=$(realpath kernout)
+KERNELSRC=$(realpath $KERNELSRC)
+./buildkernel "$KERNOUT" "$KERNELSRC"
+
+echo partition: Partitioning $TARGET
+./partition $SWAPSIZE $TARGET $FILESYSTEM
+
+echo Debootstrapping
+./install $TARGET $UBUNTUVERSION $FILESYSTEM

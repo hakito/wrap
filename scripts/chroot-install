@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+echo "# Auto generated" > /etc/fstab
+blkid -o export "$1"1 > /tmp/uuids.txt
+source /tmp/uuids.txt
+echo UUID=$UUID swap swap defaults 0 0 >> /etc/fstab
+blkid -o export "$1"2 > /tmp/uuids.txt
+source /tmp/uuids.txt
+echo UUID=$UUID / $2 defaults 0 1  >> /etc/fstab
+rm /tmp/uuids.txt
+
+dpkg --install inst/linux-image*
+apt-get -y install lilo
+liloconfig
+
+sed -i "s#^boot.\+#boot=$1#g" /etc/lilo.conf
+sed -i "s#^install.\+#install = text#g" /etc/lilo.conf
+sed -i "s#\#serial.\+#serial = 0,57600n8#g" /etc/lilo.conf
+sed -i "s#\#append.\+#append = \"console=ttyS0,57600n8 reboot=bios\"#g" /etc/lilo.conf
+
+lilo
+exit

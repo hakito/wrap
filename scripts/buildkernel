@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+cd $2
+THREADS=$(($(cat /proc/cpuinfo | grep processor | wc -l) + 1))
+make -j$THREADS O=$1 deb-pkg
+

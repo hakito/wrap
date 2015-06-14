@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+sed "s/SWAPSIZE/$1/g" partition-layout | sfdisk $2 -uM --no-reread
+partprobe
+mkswap "$2"1
+mkfs.$3 "$2"2
+e2label "$2"2 wrap
