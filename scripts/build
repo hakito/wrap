@@ -4,26 +4,31 @@ set -e
 echo config: Loading config
 source build.config
 
+TARGET=$1
+
 read -r -p "All on $TARGET will be erased. Continue? [y/N] " response
 response=${response,,}    # tolower
 if ! [[ $response =~ ^(yes|y)$ ]]; then
         exit
 fi
 
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
 echo precheck: Checking preconditions before actual build
-./precheck $FILESYSTEM
+$DIR/precheck $FILESYSTEM
 
 echo buildkernel: Building the kernel
-if ! [ -d "kernout" ]; then
-mkdir kernout
-cp kernel.config kernout/.config
+if ! [ -d "build" ]; then
+	mkdir build
+	mkdir build/kernout
+	cp kernel.config build/kernout/.config
 fi
-KERNOUT=$(realpath kernout)
+KERNOUT=$(realpath build/kernout)
 KERNELSRC=$(realpath $KERNELSRC)
-./buildkernel "$KERNOUT" "$KERNELSRC"
+$DIR/buildkernel "$KERNOUT" "$KERNELSRC"
 
 echo partition: Partitioning $TARGET
-./partition $SWAPSIZE $TARGET $FILESYSTEM
+$DIR/partition $SWAPSIZE $TARGET $FILESYSTEM
 
 echo Debootstrapping
-./install $TARGET $UBUNTUVERSION $FILESYSTEM
+$DIR/install $TARGET $UBUNTUVERSION $FILESYSTEM
