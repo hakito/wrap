@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+mkdir build/mnt
+mount "$1"2 build/mnt
+debootstrap --variant=minbase --arch=i386 $2 build/mnt http://de.archive.ubuntu.com/ubuntu
+mkdir build/mnt/inst
+mount --bind build build/mnt/inst
+mount --bind /tmp build/mnt/tmp
+mount --bind /dev build/mnt/dev
+mount --bind /dev/pts build/mnt/dev/pts
+mount -t sysfs /sys build/mnt/sys
+mount -t proc /proc build/mnt/proc
+cp /proc/mounts build/mnt/etc/mtab  
+cp /etc/resolv.conf build/mnt/etc/resolv.conf 
+echo "wrap" > build/mnt/etc/hostname
+
+cp $DIR/chroot-install build/mnt/inst
+chroot build/mnt inst/chroot-install $1 $3
+
+umount build/mnt/proc
+umount build/mnt/sys
+umount build/mnt/dev/pts
+umount build/mnt/dev
+umount build/mnt/tmp
+umount build/mnt/inst
+rm -r build/mnt/inst
+
+umount "$1"2
+rm -r build/mnt
