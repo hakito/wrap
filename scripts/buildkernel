@@ -3,5 +3,5 @@ set -e
 
 cd $2
 THREADS=$(($(cat /proc/cpuinfo | grep processor | wc -l) + 1))
-make -j$THREADS O=$1 deb-pkg
+make -j$THREADS O=$1 INSTALL_MOD_STRIP=1 deb-pkg
 
