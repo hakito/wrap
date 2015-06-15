@@ -9,7 +9,9 @@ echo $SWAP swap swap defaults 0 0 >> /etc/fstab
 echo $TARGET / $2 defaults 0 1  >> /etc/fstab
 
 dpkg --install inst/linux-image*
-apt-get -y install lilo
+apt-get -y install lilo isc-dhcp-client sudo
+echo "wrap:wrap:::wrap:/home/wrap:/bin/bash" | newusers
+usermod -aG adm,cdrom,sudo,plugdev wrap
 liloconfig
 
 sed -i "s#^boot.\+#boot=$1#g" /etc/lilo.conf
