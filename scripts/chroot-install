@@ -5,17 +5,26 @@ echo "# Auto generated" > /etc/fstab
 echo /dev/sda1 swap swap defaults 0 0 >> /etc/fstab
 echo /dev/sda2 / $2 defaults 0 1  >> /etc/fstab
 
+dpkg-divert --local --rename --add /sbin/initctl
+ln -s /bin/true /sbin/initctl 
+
+echo $4 | xargs apt-get -y install lilo sudo
+rm inst/linux-image*dbg*.deb
 dpkg --install inst/linux-image*
-apt-get -y install lilo isc-dhcp-client sudo
 echo "wrap:wrap:::wrap:/home/wrap:/bin/bash" | newusers
 usermod -aG adm,cdrom,sudo,plugdev wrap
 liloconfig
 
 sed -i "s#^boot.\+#boot=$1#g" /etc/lilo.conf
 sed -i "s#^install.\+#install = text#g" /etc/lilo.conf
-sed -i "s#\#serial.\+#serial = 0,57600n8#g" /etc/lilo.conf
-sed -i "s#\#append.\+#append = \"console=ttyS0,57600n8 reboot=bios\"#g" /etc/lilo.conf
+sed -i "s#\#serial.\+#serial = 0,$3n8#g" /etc/lilo.conf
+sed -i "s#\#append.\+#append = \"console=ttyS0,$3n8 reboot=bios\"#g" /etc/lilo.conf
 sed -i "s#\"UUID=[^\"]\+\"#/dev/sda2#g" /etc/lilo.conf
+sed -i "s#BAUD#$3#g" /etc/init/ttyS0.conf
 
 lilo
+
+rm /sbin/initctl
+dpkg-divert --local --rename --remove /sbin/initctl 
+
 exit
