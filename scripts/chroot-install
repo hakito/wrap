@@ -17,7 +17,6 @@ liloconfig
 
 sed -i "s#^boot.\+#boot=$1#g" /etc/lilo.conf
 sed -i "s#^install.\+#install = text#g" /etc/lilo.conf
-sed -i "s#\#serial.\+#serial = 0,$3n8#g" /etc/lilo.conf
 sed -i "s#\#append.\+#append = \"console=ttyS0,$3n8 reboot=bios\"#g" /etc/lilo.conf
 sed -i "s#\"UUID=[^\"]\+\"#/dev/sda2#g" /etc/lilo.conf
 sed -i "s#BAUD#$3#g" /etc/init/ttyS0.conf
