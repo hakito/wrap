@@ -19,7 +19,7 @@ echo "wrap" > mnt/etc/hostname
 
 cp $DIR/chroot-install build
 cp ttyS0.conf mnt/etc/init
-cp eth0.conf mnt/etc/network/interfaces.d
+cp eth0.conf mnt/etc/network/interfaces.d/eth0
 cat modules >> mnt/etc/modules
 chroot mnt inst/chroot-install $1 $3 $4 "$5"
 
