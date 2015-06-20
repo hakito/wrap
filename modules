@@ -1,32 +1,9 @@
-parport_pc    
-ppdev         
-lp            
-parport            
-tun           
-ext4          
-jbd2              
-crc16             
-scx200_acb    
-lm77          
-i2c_core           
-evdev         
-snd_pcm       
-snd_timer          
-snd                
-soundcore        
-snd_page_alloc      
-pcspkr        
-scx200        
-ext2          
-mbcache    
-sd_mod        
-crc_t10dif          
-ohci_hcd      
-ata_generic   
-ehci_hcd   
-pata_sc1200
-usbcore
-libata
-nls_base
-scsi_mod
-natsemi
+# LAN interfaces
+natsemi 
+# watchdog timer included in Geode SC1100 processor
+# Uncomment the following line if you are running watchdog daemon
+# wd1100 sysctl_wd_graceful=0 sysctl_wd_timeout=30 
+# thermal monitor hardware
+lm77
+# National Semiconductor SCx200 ACCESS.bus (needed for temperature reading)
+scx200_acb base=0x820,0 
