@@ -8,7 +8,7 @@ echo /dev/sda2 / $2 defaults 0 1  >> /etc/fstab
 dpkg-divert --local --rename --add /sbin/initctl
 ln -s /bin/true /sbin/initctl 
 
-echo $4 | xargs apt-get -y install lilo sudo
+apt-get -y install lilo sudo $4
 rm inst/linux-image*dbg*.deb
 dpkg --install inst/linux-image*
 echo "wrap:wrap:::wrap:/home/wrap:/bin/bash" | newusers

@@ -21,7 +21,7 @@ cp $DIR/chroot-install build
 cp ttyS0.conf mnt/etc/init
 cp eth0.conf mnt/etc/network/interfaces.d
 cat modules >> mnt/etc/modules
-chroot mnt inst/chroot-install $1 $3 $4 $5
+chroot mnt inst/chroot-install $1 $3 $4 "$5"
 
 umount mnt/proc
 umount mnt/sys
