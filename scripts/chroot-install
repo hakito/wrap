@@ -11,7 +11,7 @@ ln -s /bin/true /sbin/initctl
 apt-get -y install lilo sudo $4
 rm inst/linux-image*dbg*.deb
 dpkg --install inst/linux-image*
-echo "wrap:wrap:::wrap:/home/wrap:/bin/bash" | newusers
+echo "$5" | newusers
 usermod -aG adm,cdrom,sudo,plugdev wrap
 liloconfig
 
