@@ -12,7 +12,8 @@ apt-get -y install lilo sudo $4
 rm inst/linux-image*dbg*.deb
 dpkg --install inst/linux-image*
 echo "$5" | newusers
-usermod -aG adm,cdrom,sudo,plugdev wrap
+IFS=':' read -a array <<< "$5"
+usermod -aG adm,cdrom,sudo,plugdev "${array[0]}"
 liloconfig
 
 sed -i "s#^boot.\+#boot=$1#g" /etc/lilo.conf
